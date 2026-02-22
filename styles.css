@@ -730,17 +730,44 @@ h4,
 
 /* Mobile Responsive */
 @media (max-width: 992px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
     .grid-2 {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 3rem;
+        text-align: center;
     }
 
     .hero h1 {
         font-size: 2.5rem;
     }
 
+    .hero p {
+        margin: 0 auto 2.5rem;
+    }
+
+    .hero-btns {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .hero-stats {
+        justify-content: center;
+    }
+
+    .about-image {
+        order: -1;
+    }
+
     .contact-box {
         grid-template-columns: 1fr;
+    }
+
+    .contact-info-panel,
+    .contact-form-panel {
+        padding: 2.5rem;
     }
 
     .footer-grid {
@@ -748,8 +775,35 @@ h4,
         gap: 2rem;
     }
 
+    .header {
+        padding: 1rem 0;
+    }
+
     .nav-links {
         display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--white);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 1.5rem 0;
+    }
+
+    .nav-links li a {
+        font-size: 1.5rem;
+        margin: 0;
     }
 
     .nav-cta {
@@ -759,13 +813,67 @@ h4,
     .mobile-menu-btn {
         display: block;
         cursor: pointer;
+        z-index: 1002;
+        position: relative;
     }
 
     .mobile-menu-btn span {
         display: block;
         width: 25px;
-        height: 3px;
+        height: 2px;
         background: var(--primary);
-        margin: 5px 0;
+        margin: 6px 0;
+        transition: var(--transition);
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 6px);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -7px);
+    }
+
+    .top-bar {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .section-header h2 {
+        font-size: 2rem;
+    }
+
+    .hero {
+        padding: 5rem 0;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .services,
+    .about,
+    .why-us,
+    .contact,
+    .areas,
+    .testimonials,
+    .faq {
+        padding: 5rem 0;
+    }
+
+    .float-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
     }
 }
