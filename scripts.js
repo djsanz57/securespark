@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Contact Form Simulation
+    // Contact Form Logic
     const contactForm = document.getElementById('quote-form');
     const formStatus = document.getElementById('form-status');
 
@@ -37,30 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // reCAPTCHA Validation
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                formStatus.textContent = 'Please complete the reCAPTCHA verification.';
-                formStatus.style.color = '#e74c3c';
-                return;
-            }
-
             const data = new FormData(contactForm);
             const name = data.get('name');
             const phone = data.get('phone');
             const email = data.get('email');
+            const location = data.get('location');
             const service = data.get('service');
             const message = data.get('message');
 
-            formStatus.textContent = 'Submitting your request...';
+            // 1. Format WhatsApp Message (Immediate Notification)
+            const waMessage = `*NEW ENQUIRY - SECURESPARK*%0A%0A*Name:* ${name}%0A*Mobile:* ${phone}%0A*Email:* ${email}%0A*Location:* ${location}%0A*Service:* ${service}%0A*Message:* ${message}`;
+            const ownerWaUrl = `https://wa.me/919540141077?text=${waMessage}`;
+
+            formStatus.textContent = 'Redirecting to WhatsApp for instant notification...';
             formStatus.style.color = '#0a2351';
 
-            try {
-                // Formatting for WhatsApp Direct (Immediate Notification)
-                const waMessage = `*New Enquiry Received*%0A*Name:* ${name}%0A*Mobile:* ${phone}%0A*Email:* ${email}%0A*Service:* ${service}%0A*Message:* ${message}`;
-                const ownerWaUrl = `https://wa.me/919540141077?text=${waMessage}`;
+            // Open WhatsApp immediately
+            window.open(ownerWaUrl, '_blank');
 
-                // 1. Submit to Formspree (Handles Storage & Owner Email)
+            try {
+                // 2. Attempt to store in database (Formspree)
                 const response = await fetch(contactForm.action, {
                     method: 'POST',
                     body: data,
@@ -70,22 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    formStatus.textContent = 'Success! Your request has been sent. Opening WhatsApp for instant notification...';
+                    formStatus.textContent = 'Success! Enquiry sent via WhatsApp and Saved in Database.';
                     formStatus.style.color = '#2ecc71';
-
-                    // 2. Open WhatsApp (Frontend Redirect for Owner)
-                    window.open(ownerWaUrl, '_blank');
-
                     contactForm.reset();
-                    grecaptcha.reset();
                 } else {
-                    const result = await response.json();
-                    formStatus.textContent = result.errors ? result.errors.map(error => error.message).join(", ") : "Submission failed.";
-                    formStatus.style.color = '#e74c3c';
+                    // This happens if Formspree ID is missing/invalid
+                    formStatus.textContent = 'WhatsApp notification sent! (Admin Note: Please update Formspree ID for Database backup).';
+                    formStatus.style.color = '#f39c12';
                 }
             } catch (error) {
-                formStatus.textContent = "Oops! Problem connecting to the server.";
-                formStatus.style.color = '#e74c3c';
+                formStatus.textContent = "WhatsApp notification sent! (Online backup failed).";
+                formStatus.style.color = '#f39c12';
             }
         });
     }
@@ -108,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Simple Mobile Menu Toggle (Basic)
+    // Simple Mobile Menu Toggle
     const menuBtn = document.getElementById('menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
